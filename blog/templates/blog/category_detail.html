@@ -1,0 +1,59 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-left">
+    <div class="col-8">
+      <h1 class="mt-2">{{ category.name }}</h1>
+      <hr class="mt-0 mb-4">
+    </div>
+</div>
+
+<div class="row">
+    {% for post in category.post_set.all %}
+    <div class="col-lg-6">
+        <div class="card mb-4">
+            <a href="#!"><img class="card-img-top" src="{{ post.image.url }}" height="300px"  alt="..." /></a>
+            <div class="card-body">
+                <div class="small text-muted">Published on {{ post.published_date }} posted by {{ post.author.username }}</div>
+                <h2 class="card-title h4">{{ post.title }}</h2>
+                <p class="card-text">{{ post.content|safe|truncatechars:200 }}</p>
+                <a class="btn btn-primary" href="{% url 'post_detail' slug=post.slug %}">Read more →</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+
+    <div class="row justify-content-left">
+        <div class="col-8">
+          <h1 class="mt-2">You have no posts to display</h1>
+        </div>
+    </div>
+
+
+    {% endfor %}
+
+</div>
+
+
+<!-- Pagination-->
+{% if category.post_set.all %}
+<nav aria-label="Pagination">
+    <hr class="my-0" />
+    <ul class="pagination justify-content-center my-4">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page.number }}" tabindex="-1" aria-disabled="true">Previous</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a></li>
+        {% endif %}
+        <li class="page-item active" aria-current="page"><a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a></li>
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+{% endblock %}
+
+

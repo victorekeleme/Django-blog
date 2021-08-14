@@ -1,0 +1,65 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+
+
+<!-- Featured blog post-->
+{% if featured_post %}
+<div class="card mb-4">
+    {% if featured_post.image %}
+    <a href="#!"><img class="card-img-top" src="{{ featured_post.image.url }}" height="400px" width="850px" alt="..." /></a>
+    {% else %}
+    <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a>
+    {% endif %}
+    <div class="card-body">
+        <div class="small text-muted">Published on {{ featured_post.published_date }} posted by {{ featured_post.author.username }}</div>
+        <h2 class="card-title">{{ featured_post.title }}</h2>
+        <p class="card-text">{{ featured_post.content|truncatechars:200 }}</p>
+        <a class="btn btn-primary" href="{% url 'post_detail' slug=featured_post.slug %}">Read more →</a>
+    </div>
+</div>
+{% endif %}
+<!-- Nested row for non-featured blog posts-->
+
+<div class="row">
+    {% for post in posts %}
+    <div class="col-lg-6">
+        <div class="card mb-4">
+            {% if post.image %}
+            <a href="#!"><img class="card-img-top" src="{{ post.image.url }}" height="300px" width="850px" alt="..." /></a>
+            {% else %}
+            <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a>
+            {% endif %}
+            <div class="card-body">
+                <div class="small text-muted">Published on {{ post.published_date }} posted by {{ post.author.username }}</div>
+                <h2 class="card-title h4">{{ post.title }}</h2>
+                <p class="card-text">{{ post.content|safe|truncatechars:200 }}</p>
+                <a class="btn btn-primary" href="{% url 'post_detail' slug=post.slug %}">Read more →</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+
+</div>
+<!-- Pagination-->
+{% if posts %}
+<nav aria-label="Pagination">
+    <hr class="my-0" />
+    <ul class="pagination justify-content-center my-4">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page.number }}" tabindex="-1" aria-disabled="true">Previous</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a></li>
+        {% endif %}
+        <li class="page-item active" aria-current="page"><a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a></li>
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+{% endblock %}
+
+

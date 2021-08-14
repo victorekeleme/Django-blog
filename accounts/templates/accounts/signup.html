@@ -1,0 +1,25 @@
+{% extends 'accounts/account_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Sign up
+{% endblock %}
+
+{% block content %}
+<div class="container">
+      <div class="row justify-content-left">
+        <div class="col-8">
+          <h1 class="mt-2">Sign Up</h1>
+          <hr class="mt-0 mb-4">
+            <form method="post" class="bootstrap4">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <input type="submit" class="btn btn-primary" value="Sign Up">
+
+            </form>
+
+        </div>
+      </div>
+    </div>
+
+{% endblock %}
