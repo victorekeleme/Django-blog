@@ -27,8 +27,12 @@
             </div>
         </div>
     </div>
-    {% else %}
-
+    {% empty %}
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="card-title">You have no post matching your search query</h2>
+        </div>
+    </div>
     {% endfor %}
 
 </div>

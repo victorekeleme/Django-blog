@@ -16,6 +16,7 @@ urlpatterns = [
     path('drafts/', views.DraftPostView.as_view(), name='post_drafts'),
     path('create/', views.PostCreateView.as_view(), name='post_create'),
     path('delete/<slug:slug>/', views.PostDeleteView.as_view(), name='post_delete'),
+    path('update/<slug:slug>/', views.PostUpdateView.as_view(), name='post_update'),
     path('<slug:slug>/publish', views.publish_post, name='post_publish'),
 
 

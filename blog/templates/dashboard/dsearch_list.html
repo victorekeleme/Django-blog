@@ -33,14 +33,13 @@
                                 <a class="btn btn-danger" href="#">Delete</a>
                             </div>
                         </div>
-                        {% else %}
-
+                        {% endif %}
+                        {% empty %}
                         <div class="card mb-4">
                             <div class="card-body">
-                                <h2 class="card-title">You have no posts to display</h2>
+                                <h2 class="card-title">You have no post matching your search query</h2>
                             </div>
                         </div>
-                        {% endif %}
                     {% endfor %}
                 </div>
 
@@ -78,25 +77,25 @@
                         </div>
                     </div>
                     <!-- Categories widget-->
-                    <div class="card mb-4">
-                        <div class="card-header">Categories</div>
-                        <div class="card-body">
-                            <div class="row">
-                                {% for category in categories %}
-                                <div class="col-sm-6 text-center">
-                                    <ul class="list-unstyled mb-0">
-                                        <li><a href="{% url 'category_detail' slug=category.slug %}">{{ category.name }}</a></li>
+<!--                    <div class="card mb-4">-->
+<!--                        <div class="card-header">Categories</div>-->
+<!--                        <div class="card-body">-->
+<!--                            <div class="row">-->
+<!--                                {% for category in categories %}-->
+<!--                                <div class="col-sm-6 text-center">-->
+<!--                                    <ul class="list-unstyled mb-0">-->
+<!--                                        <li><a href="{% url 'category_detail' slug=category.slug %}">{{ category.name }}</a></li>-->
 
-                                    </ul>
-                                </div>
-                                {% endfor %}
-                                <br>
-                                <a class="btn btn-primary" href="#">Add Category</a>
+<!--                                    </ul>-->
+<!--                                </div>-->
+<!--                                {% endfor %}-->
+<!--                                <br>-->
+<!--                                <a class="btn btn-primary" href="#">Add Category</a>-->
 
 
-                            </div>
-                        </div>
-                    </div>
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
                 </div>
 
             </div>

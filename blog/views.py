@@ -35,12 +35,11 @@ class PostListView(CategoryMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(PostListView, self).get_context_data(**kwargs)
         posts = Post.objects.all()
-        context['featured_post'] = posts[0]
+        #context['featured_post'] = posts[0]
         return context
 
     def get_queryset(self):
         return Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
-
 
 class CategoryDetailView(CategoryMixin,DetailView):
     context_object_name = 'category'
@@ -157,6 +156,10 @@ class DashboardSearchView(CategoryMixin, ListView):
 class PostDeleteView(DeleteView):
     model = Post
     template_name = 'dashboard/post_confirm_delete.html'
+    success_url = reverse_lazy('dashboard')
+
+class PostUpdateView(UpdateView):
+    form_class = PostForm
     success_url = reverse_lazy('dashboard')
 
 
