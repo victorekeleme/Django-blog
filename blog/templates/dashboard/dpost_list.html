@@ -33,13 +33,13 @@
                                 <a class="btn btn-danger" href="{% url 'post_delete' slug=post.slug %}">Delete</a>
                             </div>
                         </div>
-                        {% endif %}
-                        {% empty %}
+                        {% elif not post.published_date %}
                         <div class="card mb-4">
                             <div class="card-body">
                                 <h2 class="card-title">You have no posts to display</h2>
                             </div>
                         </div>
+                        {% endif %}
                     {% endfor %}
                 </div>
 
