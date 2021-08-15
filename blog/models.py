@@ -17,7 +17,7 @@ class Post(models.Model):
     category = models.ForeignKey('blog.category', on_delete=models.CASCADE)
 
     def publish(self):
-        self.published = timezone.now()
+        self.published_date = timezone.now()
         self.save()
 
     def save(self, *args, **kwargs):

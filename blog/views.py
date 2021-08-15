@@ -1,5 +1,5 @@
 from django.core.paginator import Paginator
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import ListView, DetailView, TemplateView, CreateView
@@ -100,9 +100,7 @@ class DashBoardView(CategoryMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(DashBoardView, self).get_context_data(**kwargs)
         d_posts = self.get_dposts()
-        drafts = self.get_draft_posts()
         context['d_posts'] = d_posts
-        context['drafts'] = drafts
         context['page_obj'] = d_posts
         return context
 
@@ -114,15 +112,24 @@ class DashBoardView(CategoryMixin, ListView):
         d_posts = paginator.get_page(page)
         return d_posts
 
-    def get_draft_posts(self):
-        queryset = Post.objects.filter(published_date=None)
-        return queryset
+
+class DraftPostView(ListView):
+    context_object_name = "drafts"
+    template_name = 'dashboard/draft_post_list.html'
+    model = Post
+
+    def get_queryset(self):
+        return Post.objects.filter(published_date=None)
+
+
+
+
 
 
 class PostCreateView(CreateView):
     template_name = 'dashboard/post_form.html'
     form_class = PostForm
-    success_url = 'd_post_list'
+    success_url = 'post_drafts'
     
     def form_valid(self, form):
         post_form = form.save(commit=False)
@@ -131,6 +138,12 @@ class PostCreateView(CreateView):
 
         super(PostCreateView, self).form_valid(form)
         
+
+def publish_post(request,slug):
+    post = get_object_or_404(Post, slug=slug)
+    post.publish()
+    return redirect('dashboard', slug=slug)
+
 
 
 

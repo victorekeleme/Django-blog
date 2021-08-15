@@ -11,11 +11,10 @@
         <div class="col-8">
           <h1 class="mt-2">Create Post</h1>
           <hr class="mt-0 mb-4">
-            <form method="post" class="bootstrap4">
+            <form method="post" class="bootstrap4" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form|crispy }}
                 <br>
-                <a type="submit" class="btn btn-primary" >Publish</a>
                 <input type="submit" class="btn btn-primary" value="Save Post">
 
             </form>
