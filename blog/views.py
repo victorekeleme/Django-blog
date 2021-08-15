@@ -6,7 +6,7 @@ from django.views.generic import ListView, DetailView, TemplateView, CreateView
 from blog.models import Post, Category
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
-from blog.forms import SignUpForm
+from blog.forms import SignUpForm, PostForm
 
 from rest_framework import viewsets
 from .serializers import CategorySerializer
@@ -87,12 +87,6 @@ class SearchPostView(CategoryMixin, ListView):
         return s_posts
 
 
-    # def get_queryset(self):
-    #     search = self.request.GET.get('q')
-    #     if search != '' and search is not None:
-    #         return Post.objects.filter(title__icontains=search)
-
-
 class PostDetailView(CategoryMixin, DetailView):
     context_object_name = 'post'
     model = Post
@@ -100,23 +94,46 @@ class PostDetailView(CategoryMixin, DetailView):
 
 class DashBoardView(CategoryMixin, ListView):
     context_object_name = "posts"
-    template_name = 'blog/dashboard.html'
+    template_name = 'dashboard/dpost_list.html'
     model = Post
 
     def get_context_data(self, **kwargs):
         context = super(DashBoardView, self).get_context_data(**kwargs)
         d_posts = self.get_dposts()
+        drafts = self.get_draft_posts()
         context['d_posts'] = d_posts
+        context['drafts'] = drafts
         context['page_obj'] = d_posts
         return context
 
 
     def get_dposts(self):
-        queryset = Post.objects.all()
+        queryset = Post.objects.filter(author_id=self.request.user)
         paginator = Paginator(queryset,10)
         page = self.request.GET.get('page')
         d_posts = paginator.get_page(page)
         return d_posts
+
+    def get_draft_posts(self):
+        queryset = Post.objects.filter(published_date=None)
+        return queryset
+
+
+class PostCreateView(CreateView):
+    template_name = 'dashboard/post_form.html'
+    form_class = PostForm
+    success_url = 'd_post_list'
+    
+    def form_valid(self, form):
+        post_form = form.save(commit=False)
+        post_form.author = self.request.user
+        post_form.save()
+
+        super(PostCreateView, self).form_valid(form)
+        
+
+
+
 
 #REST API
 class CategoryViewSet(viewsets.ModelViewSet):

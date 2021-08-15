@@ -6,11 +6,11 @@ from django.contrib.auth.models import User
 
 
 class PostForm(forms.ModelForm):
-    model = Post
     class Meta:
-        fields = ('title', 'content')
+        model = Post
+        fields = ('title', 'content', 'image','category')
 
 class SignUpForm(UserCreationForm):
-    model = User
     class Meta:
+        model = User
         fields = ('first_name','last_name','username','password1','password2')
