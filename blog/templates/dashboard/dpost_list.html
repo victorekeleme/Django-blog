@@ -28,8 +28,8 @@
                             <div class="card-body">
                                 <div class="small text-muted">Published on {{ post.published_date }} posted by {{ post.author.username }}</div>
                                 <h2 class="card-title">{{ post.title }}</h2>
-                                <a class="btn btn-primary" href="#">View</a>
-                                <a class="btn btn-warning" href="#">Update</a>
+                                <a class="btn btn-primary" href="{% url 'post_detail' slug=post.slug %}">View</a>
+                                <a class="btn btn-warning" href="{% url 'post_update' slug=post.slug %}">Update</a>
                                 <a class="btn btn-danger" href="{% url 'post_delete' slug=post.slug %}">Delete</a>
                             </div>
                         </div>

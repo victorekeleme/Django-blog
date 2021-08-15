@@ -1,5 +1,5 @@
 from django.core.paginator import Paginator
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, DeleteView, UpdateView
@@ -160,8 +160,22 @@ class PostDeleteView(DeleteView):
 
 class PostUpdateView(UpdateView):
     form_class = PostForm
+    model = Post
+    template_name = 'dashboard/post_form.html'
+
     success_url = reverse_lazy('dashboard')
 
+def Like_Post(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+    is_liked = False
+    if post.likes.filter(id=request.user.id).exists():
+        post.likes.remove(request.user)
+        is_liked = False
+    else:
+        post.likes.add(request.user)
+        is_liked = True
+
+    return HttpResponseRedirect('post_list')
 
 def publish_post(request,slug):
     post = get_object_or_404(Post, slug=slug)

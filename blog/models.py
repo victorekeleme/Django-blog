@@ -15,6 +15,10 @@ class Post(models.Model):
     created_date = models.DateField(default=timezone.now)
     published_date = models.DateField(blank=True, null=True)
     category = models.ForeignKey('blog.category', on_delete=models.CASCADE)
+    likes = models.ManyToManyField(User, related_name="post_like")
+
+    def likes_count(self):
+        return self.likes.count()
 
     def publish(self):
         self.published_date = timezone.now()

@@ -18,7 +18,7 @@ urlpatterns = [
     path('delete/<slug:slug>/', views.PostDeleteView.as_view(), name='post_delete'),
     path('update/<slug:slug>/', views.PostUpdateView.as_view(), name='post_update'),
     path('<slug:slug>/publish', views.publish_post, name='post_publish'),
-
+    path('like/<slug:slug>', views.Like_Post, name = 'like_post')
 
 
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
