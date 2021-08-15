@@ -2,6 +2,10 @@
 
 {% block content %}
 
+{% block title %}
+    {{ category.name }}
+{% endblock %}
+
 <div class="row justify-content-left">
     <div class="col-8">
       <h1 class="mt-2">{{ category.name }}</h1>

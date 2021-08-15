@@ -1,5 +1,15 @@
 {% extends 'blog/base.html' %}
 
+{% block title %}
+{% if user.username %}
+    {{ user.username|title }}'s Blog
+    {% else %}
+    Frendzy Blog
+{% endif %}
+
+{% endblock %}
+
+
 {% block content %}
 
 
