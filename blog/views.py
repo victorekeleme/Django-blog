@@ -2,7 +2,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils import timezone
-from django.views.generic import ListView, DetailView, TemplateView, CreateView
+from django.views.generic import ListView, DetailView, TemplateView, CreateView, DeleteView, UpdateView
 from blog.models import Post, Category
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
@@ -63,7 +63,6 @@ class CategoryDetailView(CategoryMixin,DetailView):
         return cat_posts
 
 
-
 class SearchPostView(CategoryMixin, ListView):
     context_object_name = 'posts'
     model = Post
@@ -93,7 +92,6 @@ class PostDetailView(CategoryMixin, DetailView):
 
 
 class DashBoardView(CategoryMixin, ListView):
-    context_object_name = "posts"
     template_name = 'dashboard/dpost_list.html'
     model = Post
 
@@ -107,7 +105,7 @@ class DashBoardView(CategoryMixin, ListView):
 
     def get_dposts(self):
         queryset = Post.objects.filter(author_id=self.request.user)
-        paginator = Paginator(queryset,10)
+        paginator = Paginator(queryset, 8)
         page = self.request.GET.get('page')
         d_posts = paginator.get_page(page)
         return d_posts
@@ -122,27 +120,51 @@ class DraftPostView(ListView):
         return Post.objects.filter(published_date=None)
 
 
-
-
-
-
 class PostCreateView(CreateView):
     template_name = 'dashboard/post_form.html'
     form_class = PostForm
-    success_url = 'post_drafts'
-    
+    success_url = reverse_lazy('post_drafts')
+
     def form_valid(self, form):
         post_form = form.save(commit=False)
         post_form.author = self.request.user
         post_form.save()
+        return super(PostCreateView, self).form_valid(form)
 
-        super(PostCreateView, self).form_valid(form)
         
+class DashboardSearchView(CategoryMixin, ListView):
+    model = Post
+    template_name = 'dashboard/dsearch_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DashboardSearchView, self).get_context_data(**kwargs)
+        s_posts = self.get_sposts()
+        context['s_posts'] = s_posts
+        context['page_obj'] = s_posts
+        return context
+
+    def get_sposts(self):
+        search = self.request.GET.get('q')
+        if search != '' and search is not None:
+            searched = Post.objects.filter(author_id=self.request.user, title__icontains=search)
+        queryset = searched
+        paginator = Paginator(queryset, 8)
+        page = self.request.GET.get('page')
+        s_posts = paginator.get_page(page)
+        return s_posts
+
+
+class PostDeleteView(DeleteView):
+    model = Post
+    template_name = 'dashboard/post_confirm_delete.html'
+    success_url = reverse_lazy('dashboard')
+
 
 def publish_post(request,slug):
     post = get_object_or_404(Post, slug=slug)
+    post_slug = post.slug
     post.publish()
-    return redirect('dashboard', slug=slug)
+    return redirect('dashboard')
 
 
 

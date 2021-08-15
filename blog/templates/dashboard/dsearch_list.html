@@ -22,18 +22,19 @@
                     </div>
 
 
-                    {% for post in d_posts %}
-                        {% if post.published_date %}
+                    {% for post in s_posts %}
+                        {% if s_posts %}
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div class="small text-muted">Published on {{ post.published_date }} posted by {{ post.author.username }}</div>
                                 <h2 class="card-title">{{ post.title }}</h2>
                                 <a class="btn btn-primary" href="#">View</a>
                                 <a class="btn btn-warning" href="#">Update</a>
-                                <a class="btn btn-danger" href="{% url 'post_delete' slug=post.slug %}">Delete</a>
+                                <a class="btn btn-danger" href="#">Delete</a>
                             </div>
                         </div>
                         {% else %}
+
                         <div class="card mb-4">
                             <div class="card-body">
                                 <h2 class="card-title">You have no posts to display</h2>
@@ -77,24 +78,24 @@
                         </div>
                     </div>
                     <!-- Categories widget-->
-<!--                    <div class="card mb-4">-->
-<!--                        <div class="card-header">Categories</div>-->
-<!--                        <div class="card-body">-->
-<!--                            <div class="row">-->
-<!--                                {% for category in categories %}-->
-<!--                                <div class="col-sm-6 text-center">-->
-<!--                                    <ul class="list-unstyled mb-0">-->
-<!--                                        <li><a href="{% url 'category_detail' slug=category.slug %}">{{ category.name }}</a></li>-->
+                    <div class="card mb-4">
+                        <div class="card-header">Categories</div>
+                        <div class="card-body">
+                            <div class="row">
+                                {% for category in categories %}
+                                <div class="col-sm-6 text-center">
+                                    <ul class="list-unstyled mb-0">
+                                        <li><a href="{% url 'category_detail' slug=category.slug %}">{{ category.name }}</a></li>
 
-<!--                                    </ul>-->
-<!--                                </div>-->
-<!--                                {% endfor %}-->
-<!--                                <br>-->
-<!--                                <a class="btn btn-primary" href="#">Add Category</a>-->
+                                    </ul>
+                                </div>
+                                {% endfor %}
+                                <br>
+                                <a class="btn btn-primary" href="#">Add Category</a>
 
 
-<!--                            </div>-->
-<!--                        </div>-->
+                            </div>
+                        </div>
                     </div>
                 </div>
 
