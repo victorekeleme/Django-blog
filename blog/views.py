@@ -175,7 +175,7 @@ def Like_Post(request, slug):
         post.likes.add(request.user)
         is_liked = True
 
-    return HttpResponseRedirect('post_list')
+    return redirect('post_list')
 
 def publish_post(request,slug):
     post = get_object_or_404(Post, slug=slug)
