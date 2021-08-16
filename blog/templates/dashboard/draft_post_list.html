@@ -22,7 +22,7 @@
 
 
                     {% for post in drafts %}
-                        {% if not post.published_date%}
+                        {% if post.published_date == None %}
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div class="small text-muted">Published on {{ post.published_date }} posted by {{ post.author.username }}</div>
@@ -33,7 +33,7 @@
                             </div>
                         </div>
 
-                        {% elif not post.published_date%}
+                        {% elif drafts.count == 0 %}
                         <div class="card mb-4">
                             <div class="card-body">
                                 <h2 class="card-title">You have no posts to display</h2>
