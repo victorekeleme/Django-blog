@@ -93,7 +93,7 @@ class PostDetailView(CategoryMixin, DetailView):
 
 
 class DashBoardView(LoginRequiredMixin, CategoryMixin, ListView):
-    login_url = '/login/'
+    login_url = 'accounts:login'
     template_name = 'dashboard/dpost_list.html'
     model = Post
 
@@ -114,7 +114,7 @@ class DashBoardView(LoginRequiredMixin, CategoryMixin, ListView):
 
 
 class DraftPostView(LoginRequiredMixin, ListView):
-    login_url = '/login/'
+    login_url = 'accounts:login'
     context_object_name = "drafts"
     template_name = 'dashboard/draft_post_list.html'
     model = Post
@@ -124,7 +124,7 @@ class DraftPostView(LoginRequiredMixin, ListView):
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
-    login_url = '/login/'
+    login_url = 'accounts:login'
     template_name = 'dashboard/post_form.html'
     form_class = PostForm
     success_url = reverse_lazy('post_drafts')
@@ -137,7 +137,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
         
 class DashboardSearchView(LoginRequiredMixin, CategoryMixin, ListView):
-    login_url = '/login/'
+    login_url = 'accounts:login'
     model = Post
     template_name = 'dashboard/dsearch_list.html'
 
@@ -160,13 +160,13 @@ class DashboardSearchView(LoginRequiredMixin, CategoryMixin, ListView):
 
 
 class PostDeleteView(LoginRequiredMixin, DeleteView):
-    login_url = '/login/'
+    login_url = 'accounts:login'
     model = Post
     template_name = 'dashboard/post_confirm_delete.html'
     success_url = reverse_lazy('dashboard')
 
 class PostUpdateView(LoginRequiredMixin, UpdateView):
-    login_url = '/login/'
+    login_url = 'accounts:login'
     form_class = PostForm
     model = Post
     template_name = 'dashboard/post_form.html'
