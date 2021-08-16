@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -7,6 +8,7 @@ from blog.models import Post, Category
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from blog.forms import SignUpForm, PostForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from rest_framework import viewsets
 from .serializers import CategorySerializer
@@ -90,7 +92,8 @@ class PostDetailView(CategoryMixin, DetailView):
     model = Post
 
 
-class DashBoardView(CategoryMixin, ListView):
+class DashBoardView(LoginRequiredMixin, CategoryMixin, ListView):
+    login_url = '/login/'
     template_name = 'dashboard/dpost_list.html'
     model = Post
 
@@ -110,7 +113,8 @@ class DashBoardView(CategoryMixin, ListView):
         return d_posts
 
 
-class DraftPostView(ListView):
+class DraftPostView(LoginRequiredMixin, ListView):
+    login_url = '/login/'
     context_object_name = "drafts"
     template_name = 'dashboard/draft_post_list.html'
     model = Post
@@ -119,7 +123,8 @@ class DraftPostView(ListView):
         return Post.objects.filter(published_date=None)
 
 
-class PostCreateView(CreateView):
+class PostCreateView(LoginRequiredMixin, CreateView):
+    login_url = '/login/'
     template_name = 'dashboard/post_form.html'
     form_class = PostForm
     success_url = reverse_lazy('post_drafts')
@@ -131,7 +136,8 @@ class PostCreateView(CreateView):
         return super(PostCreateView, self).form_valid(form)
 
         
-class DashboardSearchView(CategoryMixin, ListView):
+class DashboardSearchView(LoginRequiredMixin, CategoryMixin, ListView):
+    login_url = '/login/'
     model = Post
     template_name = 'dashboard/dsearch_list.html'
 
@@ -153,18 +159,21 @@ class DashboardSearchView(CategoryMixin, ListView):
         return s_posts
 
 
-class PostDeleteView(DeleteView):
+class PostDeleteView(LoginRequiredMixin, DeleteView):
+    login_url = '/login/'
     model = Post
     template_name = 'dashboard/post_confirm_delete.html'
     success_url = reverse_lazy('dashboard')
 
-class PostUpdateView(UpdateView):
+class PostUpdateView(LoginRequiredMixin, UpdateView):
+    login_url = '/login/'
     form_class = PostForm
     model = Post
     template_name = 'dashboard/post_form.html'
 
     success_url = reverse_lazy('dashboard')
 
+@login_required
 def Like_Post(request, slug):
     post = get_object_or_404(Post, slug=slug)
     is_liked = False
@@ -177,6 +186,7 @@ def Like_Post(request, slug):
 
     return redirect('post_list')
 
+@login_required
 def publish_post(request,slug):
     post = get_object_or_404(Post, slug=slug)
     post_slug = post.slug
