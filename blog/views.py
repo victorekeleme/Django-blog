@@ -26,8 +26,6 @@ class CategoryMixin(object):
         return context
 
 
-
-
 class PostListView(CategoryMixin, ListView):
     context_object_name = 'posts'
     model = Post
