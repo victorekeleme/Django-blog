@@ -1,0 +1,27 @@
+{% extends 'profiles/profiles_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Post | Add Comment
+{% endblock %}
+
+{% block content %}
+<div class="container">
+      <div class="row justify-content-left">
+        <div class="col-8">
+          <h1 class="mt-2">Add Comment</h1>
+          <hr class="mt-0 mb-4">
+            <form method="post" class="bootstrap4" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <br>
+                <input type="submit" class="btn btn-primary" value="Send">
+                <a class="btn btn-danger" href="{% url 'post_detail' slug=post.slug%}">Cancel</a>
+
+            </form>
+
+        </div>
+      </div>
+    </div>
+
+{% endblock %}
