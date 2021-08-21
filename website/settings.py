@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog.apps.BlogConfig',
-    'accounts',
+    'profiles',
     'crispy_forms',
     'rest_framework',
 ]
@@ -85,14 +85,32 @@ WSGI_APPLICATION = 'website.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
+
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'frendzydb',
+        'NAME': 'frendzyDB',
         'USER': 'postgres',
         'PASSWORD': 'paynen12',
         'HOST': 'localhost'
     }
+
+
 }
+
+# 'default': {
+#     'ENGINE': 'django.db.backends.sqlite3',
+#     'NAME': BASE_DIR / 'db.sqlite3',
+# }
+
+
+# 'default': {
+#     'ENGINE': 'django.db.backends.postgresql',
+#     'NAME': 'frendzyDB',
+#     'USER': 'postgres',
+#     'PASSWORD': 'paynen12',
+#     'HOST': 'localhost'
+# }
+
 
 db_from_env = dj_database_url.config(conn_max_age=600)
 DATABASES['default'].update(db_from_env)
@@ -153,6 +171,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-LOGIN_URL = 'accounts:login'
+LOGIN_URL = 'profiles:login'
 
 LOGIN_REDIRECT_URL = '/'

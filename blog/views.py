@@ -1,13 +1,15 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, DeleteView, UpdateView
-from blog.models import Post, Category
+from blog.models import Post, Category, Comments
+from profiles.models import Profile
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
-from blog.forms import SignUpForm, PostForm
+from blog.forms import SignUpForm, PostForm, CommentForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from rest_framework import viewsets
@@ -15,7 +17,7 @@ from .serializers import CategorySerializer
 # Create your views here.
 
 
-
+# Category mixins to show category in all pages
 class CategoryMixin(object):
     def get_categories(self):
         return Category.objects.all()
@@ -25,7 +27,7 @@ class CategoryMixin(object):
         context['categories'] = self.get_categories()
         return context
 
-
+# displays all posts
 class PostListView(CategoryMixin, ListView):
     context_object_name = 'posts'
     model = Post
@@ -41,6 +43,7 @@ class PostListView(CategoryMixin, ListView):
     def get_queryset(self):
         return Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
 
+# displays posts by category
 class CategoryDetailView(CategoryMixin,DetailView):
     context_object_name = 'category'
     model = Category
@@ -62,6 +65,7 @@ class CategoryDetailView(CategoryMixin,DetailView):
         return cat_posts
 
 
+# search for post
 class SearchPostView(CategoryMixin, ListView):
     context_object_name = 'posts'
     model = Post
@@ -85,13 +89,59 @@ class SearchPostView(CategoryMixin, ListView):
         return s_posts
 
 
+# displays post detail
 class PostDetailView(CategoryMixin, DetailView):
     context_object_name = 'post'
     model = Post
 
+    def get_context_data(self, **kwargs):
+        context = super(PostDetailView, self).get_context_data(**kwargs)
+        context['comments'] = Comments.objects.all()
+        context['form'] = CommentForm
+        return context
 
+# create comment
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    login_url = 'profiles:login'
+    model = Comments
+    form_class = CommentForm
+
+    def get_success_URL(self):
+        return reverse('post_detail', kwargs={'slug': self.object.slug})
+
+    def form_valid(self, form):
+        post = get_object_or_404(Post, slug = self.kwargs['slug'] )
+        comment_form = form.save(commit=False)
+        comment_form.author = self.request.user.profile
+        comment_form.post = post
+        comment_form.save()
+
+        return super(CommentCreateView, self).form_valid(form)
+
+
+
+# def add_comment_to_post(request, slug):
+#     post = get_object_or_404(Post, slug=slug)
+#     if request.method == "POST":
+#         form = CommentForm(data=request.POST)
+#         comment_form = form.save(commit=False)
+#         try:
+#             comment_form.author = request.user.profile
+#             comment_form.post = post
+#             comment_form.save()
+#         except:
+#             print('user has no profile')
+#
+#         return redirect('post_detail', slug=post.slug)
+#     else:
+#         form = CommentForm()
+#     return render(request, 'blog/comments_form.html', {'form':form})
+
+
+
+# user dashboard for CRUD operations
 class DashBoardView(LoginRequiredMixin, CategoryMixin, ListView):
-    login_url = 'accounts:login'
+    login_url = 'profiles:login'
     template_name = 'dashboard/dpost_list.html'
     model = Post
 
@@ -104,38 +154,30 @@ class DashBoardView(LoginRequiredMixin, CategoryMixin, ListView):
 
 
     def get_dposts(self):
-        queryset = Post.objects.filter(author_id=self.request.user)
+        queryset = Post.objects.filter(author_id=self.request.user.profile)
         paginator = Paginator(queryset, 8)
         page = self.request.GET.get('page')
         d_posts = paginator.get_page(page)
         return d_posts
 
 
-class DraftPostView(LoginRequiredMixin, ListView):
-    login_url = 'accounts:login'
-    context_object_name = "drafts"
-    template_name = 'dashboard/draft_post_list.html'
-    model = Post
-
-    def get_queryset(self):
-        return Post.objects.filter(published_date=None)
-
-
+# creating post
 class PostCreateView(LoginRequiredMixin, CreateView):
-    login_url = 'accounts:login'
+    login_url = 'profiles:login'
     template_name = 'dashboard/post_form.html'
     form_class = PostForm
-    success_url = reverse_lazy('post_drafts')
+    success_url = reverse_lazy('dashboard')
 
     def form_valid(self, form):
         post_form = form.save(commit=False)
-        post_form.author = self.request.user
+        post_form.author = self.request.user.profile
         post_form.save()
         return super(PostCreateView, self).form_valid(form)
 
-        
+
+# user dashboard search
 class DashboardSearchView(LoginRequiredMixin, CategoryMixin, ListView):
-    login_url = 'accounts:login'
+    login_url = 'profiles:login'
     model = Post
     template_name = 'dashboard/dsearch_list.html'
 
@@ -149,7 +191,7 @@ class DashboardSearchView(LoginRequiredMixin, CategoryMixin, ListView):
     def get_sposts(self):
         search = self.request.GET.get('q')
         if search != '' and search is not None:
-            searched = Post.objects.filter(author_id=self.request.user, title__icontains=search)
+            searched = Post.objects.filter(author_id=self.request.user.profile, title__icontains=search)
         queryset = searched
         paginator = Paginator(queryset, 8)
         page = self.request.GET.get('page')
@@ -157,39 +199,43 @@ class DashboardSearchView(LoginRequiredMixin, CategoryMixin, ListView):
         return s_posts
 
 
+# post delete view
 class PostDeleteView(LoginRequiredMixin, DeleteView):
-    login_url = 'accounts:login'
+    login_url = 'profiles:login'
     model = Post
     template_name = 'dashboard/post_confirm_delete.html'
     success_url = reverse_lazy('dashboard')
 
+# post update view
 class PostUpdateView(LoginRequiredMixin, UpdateView):
-    login_url = 'accounts:login'
+    login_url = 'profiles:login'
     form_class = PostForm
     model = Post
     template_name = 'dashboard/post_form.html'
-
     success_url = reverse_lazy('dashboard')
 
+
+# like post functionality
 @login_required
 def Like_Post(request, slug):
     post = get_object_or_404(Post, slug=slug)
     is_liked = False
-    if post.likes.filter(id=request.user.id).exists():
-        post.likes.remove(request.user)
+    if post.likes.filter(id=request.user.profile.id).exists():
+        post.likes.remove(request.user.profile)
         is_liked = False
     else:
-        post.likes.add(request.user)
+        post.likes.add(request.user.profile)
         is_liked = True
 
     return redirect('post_list')
 
-@login_required
-def publish_post(request,slug):
-    post = get_object_or_404(Post, slug=slug)
-    post_slug = post.slug
-    post.publish()
-    return redirect('dashboard')
+
+# @login_required
+# def publish_post(request,slug):
+#     post = get_object_or_404(Post, slug=slug)
+#     post_slug = post.slug
+#     post.publish()
+#     return redirect('dashboard')
 
 
 
