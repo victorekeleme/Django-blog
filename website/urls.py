@@ -16,14 +16,15 @@ from django.contrib import admin
 from django.urls import path, include
 
 from rest_framework import routers
-from blog.views import CategoryViewSet
+from blog.views import CategoryViewSet,PostViewSet
 
 router = routers.DefaultRouter()
 router.register('category', CategoryViewSet)
+router.register('post', PostViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('blog.urls')),
     path('profiles/', include('profiles.urls')),
-    path('api', include(router.urls)),
+    path('api/', include(router.urls)),
 ]

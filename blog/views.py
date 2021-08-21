@@ -12,8 +12,9 @@ from django.contrib.auth.forms import UserCreationForm
 from blog.forms import SignUpForm, PostForm, CommentForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+# REST API IMPORT
 from rest_framework import viewsets
-from .serializers import CategorySerializer
+from .serializers import CategorySerializer, PostSerializer
 # Create your views here.
 
 
@@ -227,7 +228,7 @@ def Like_Post(request, slug):
         post.likes.add(request.user.profile)
         is_liked = True
 
-    return redirect('post_list')
+    return HttpResponseRedirect(reverse('post_list'))
 
 
 # @login_required
@@ -245,6 +246,10 @@ def Like_Post(request, slug):
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
 
 
 
