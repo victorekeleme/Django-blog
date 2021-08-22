@@ -1,25 +1,53 @@
-{% extends 'profiles/profiles_base.html' %}
-{% load crispy_forms_tags %}
+{% extends 'profiles/base.html' %}
+{% load static %}
 
 {% block title %}
-    Sign up
+    Frendzy Blog | Sign Up
 {% endblock %}
 
 {% block content %}
 <div class="container">
-      <div class="row justify-content-left">
-        <div class="col-8">
-          <h1 class="mt-2">Sign Up</h1>
-          <hr class="mt-0 mb-4">
-            <form method="post" class="bootstrap4">
+
+    <div class="row content">
+        {% if messages %}
+            {% for message in messages %}
+             <div class="alert alert-{{message.tags}}">
+               {{message}}
+             </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="col-md-6 mb-3">
+            <h2 class="text-center bg-"><span class="text-primary">Frendzy Blog</span></h2>
+
+            <img src="{% static 'asserts/signup.png' %}" class="img-fluid" alt="image">
+        </div>
+        <div class="col-md-6">
+            <h3 class="signup-text mb-3">Sign Up</h3>
+            <form id="signup-form" method="post" >
                 {% csrf_token %}
-                {{ form|crispy }}
-                <input type="submit" class="btn btn-primary" value="Sign Up">
+                <div class="form-group">
+                    <input class="form-control" type="text" name="username" id="username" placeholder="Username">
+                </div>
+
+                <div class="form-group">
+                    <input  class="form-control" type="password" name="password1" id="password" placeholder="Password">
+                </div>
+
+                <div class="form-group">
+                    <input  class="form-control" type="password" name="password2" id="password2" placeholder="Password Confirmation">
+                </div>
+
+
+                <button class="btn btn-outline-primary" >Sign Up</button>
+                <br>
+                <br>
+                <p>Already have an account? Login <a href="{% url 'profiles:login' %}">here</a></p>
 
             </form>
-
         </div>
-      </div>
+
     </div>
+</div>
 
 {% endblock %}
