@@ -1,13 +1,36 @@
-{% extends 'profiles/profiles_base.html' %}
+{% extends 'profiles/base.html' %}
+{% load static %}
 
 {% block title %}
-    Logout
+    Frendzy Blog | Logout
 {% endblock %}
 
 
 {% block content %}
 
-<h1>Thanks</h1>
+<div class="container">
+
+    <div class="row content">
+
+
+        <div class="col-md-12 mb-3">
+            <h2 class="text-center bg-"><span class="text-primary">Thanks for your time</span></h2>
+
+            <img src="{% static 'asserts/logout.png' %}" class="img-fluid" alt="image">
+        <h2 class="text-center">Wanna come back?</></h2>
+        <h3 class="text-center">>>><a href="{% url 'profiles:login' %}">Login Here</a><<<</></h2>
+
+        </div>
+
+
+<!--        <div class="col-md-6">-->
+<!--                <p>Not Registered? Sign up <a href="{% url 'profiles:signup' %}">Here..</a></p>-->
+
+<!--        </div>-->
+
+    </div>
+</div>
+
 
 {% endblock %}
 
