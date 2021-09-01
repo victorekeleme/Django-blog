@@ -10959,3 +10959,20 @@ textarea.form-control-lg {
     background-color: transparent;
     border-color: #fff;
 }
+
+.content {
+  background-color: #fff;
+  padding: 0px;
+  box-shadow: 0 0 5px 5px #0000000d;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.form-control {
+  box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.05);
+}
+
+.post-image {
+  margin: 5px;
+  height: fit-content;
+}

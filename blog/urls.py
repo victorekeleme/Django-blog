@@ -12,7 +12,6 @@ urlpatterns = [
     path('category/<slug:slug>/', views.CategoryDetailView.as_view(), name='category_detail'),
 
     path('dashboard/', views.DashBoardView.as_view(), name='dashboard'),
-    path('dsearch/', views.DashboardSearchView.as_view(), name='dsearch_result'),
     path('create/', views.PostCreateView.as_view(), name='post_create'),
 
     path('delete/<slug:slug>/', views.PostDeleteView.as_view(), name='post_delete'),
@@ -20,8 +19,8 @@ urlpatterns = [
     # path('<slug:slug>/publish', views.publish_post, name='post_publish'),
     path('like/<slug:slug>', views.Like_Post, name = 'like_post'),
 
-    # path('post/<slug:slug>/comment/', views.add_comment_to_post, name = 'add_comment')
-    path('post/<slug:slug>/comment/', views.CommentCreateView.as_view(), name = 'add_comment')
+    # path('post/<slug:slug>/comment/', views.add_comment_to_post, name = 'add_comment'),
+    # path('post/<slug:slug>/comment/', views.CommentCreateView.as_view(), name = 'add_comment')
 
 
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

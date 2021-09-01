@@ -20,12 +20,10 @@ class Post(models.Model):
     def likes_count(self):
         return self.likes.count()
 
-
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         self.published_date = timezone.now()
         super().save(*args, **kwargs)
-
 
     def get_absolute_url(self):
         return reverse('post_detail', kwargs={'slug':self.slug})

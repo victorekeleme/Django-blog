@@ -19,7 +19,7 @@ $(document).ready(function()
 });
 
 
-// Window resize
+// Window resizes
 $(window).resize(function()
 {
 	$('.hero').css('height', ($(window).height() - $('header').outerHeight()) + 'px'); // Refresh hero height

@@ -11,6 +11,7 @@ class Profile(models.Model):
     first_name = models.CharField(max_length=200, blank=True)
     last_name = models.CharField(max_length=200, blank=True)
     email = models.CharField(max_length=200, blank=True)
+    bio = models.CharField(max_length=500, blank=True)
     profile_pic = models.ImageField(default='profiles.png', upload_to='profile_pics/')
     slug = models.SlugField(unique=True, blank=True)
 

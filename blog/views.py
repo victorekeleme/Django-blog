@@ -35,12 +35,6 @@ class PostListView(CategoryMixin, ListView):
     paginate_by = 8
     template_name = 'blog/post_list.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(PostListView, self).get_context_data(**kwargs)
-        posts = Post.objects.all()
-        #context['featured_post'] = posts[0]
-        return context
-
     def get_queryset(self):
         return Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
 
@@ -101,30 +95,45 @@ class PostDetailView(CategoryMixin, DetailView):
         context['form'] = CommentForm
         return context
 
-# create comment
-class CommentCreateView(LoginRequiredMixin, CreateView):
-    login_url = 'profiles:login'
-    model = Comments
-    form_class = CommentForm
-
-    def get_success_URL(self):
-        return reverse('post_detail', kwargs={'slug': self.object.slug})
-
-    def form_valid(self, form):
-        post = get_object_or_404(Post, slug = self.kwargs['slug'] )
+    # create comment in post detailview
+    def post(self, request, *args, **kwargs):
+        form = CommentForm(request.POST)
         comment_form = form.save(commit=False)
-        comment_form.author = self.request.user.profile
-        comment_form.post = post
-        comment_form.save()
+        if form.is_valid():
+            post = self.get_object()
+            comment_form.author = self.request.user.profile
+            comment_form.post = post
+            comment_form.save()
 
-        return super(CommentCreateView, self).form_valid(form)
+            return redirect(reverse("post_detail", kwargs={'slug':post.slug}))
 
+
+
+
+
+# class CommentCreateView(LoginRequiredMixin, CreateView):
+#     login_url = 'profiles:login'
+#     model = Comments
+#     form_class = CommentForm
+#
+#     def get_success_URL(self):
+#         return reverse('post_detail', kwargs={'slug': self.object.slug})
+#
+#     def form_valid(self, form):
+#         post = get_object_or_404(Post, slug = self.kwargs['slug'] )
+#         comment_form = form.save(commit=False)
+#         comment_form.author = self.request.user.profile
+#         comment_form.post = post
+#         comment_form.save()
+#
+#         return super(CommentCreateView, self).form_valid(form)
 
 
 # def add_comment_to_post(request, slug):
 #     post = get_object_or_404(Post, slug=slug)
 #     if request.method == "POST":
-#         form = CommentForm(data=request.POST)
+#
+#         form = CommentForm(data=request.POST['comment'])
 #         comment_form = form.save(commit=False)
 #         try:
 #             comment_form.author = request.user.profile
@@ -134,10 +143,7 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 #             print('user has no profile')
 #
 #         return redirect('post_detail', slug=post.slug)
-#     else:
-#         form = CommentForm()
-#     return render(request, 'blog/comments_form.html', {'form':form})
-
+#     return reverse('post_detail', slug=post.slug)
 
 
 # user dashboard for CRUD operations
@@ -174,30 +180,6 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         post_form.author = self.request.user.profile
         post_form.save()
         return super(PostCreateView, self).form_valid(form)
-
-
-# user dashboard search
-class DashboardSearchView(LoginRequiredMixin, CategoryMixin, ListView):
-    login_url = 'profiles:login'
-    model = Post
-    template_name = 'dashboard/dsearch_list.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(DashboardSearchView, self).get_context_data(**kwargs)
-        s_posts = self.get_sposts()
-        context['s_posts'] = s_posts
-        context['page_obj'] = s_posts
-        return context
-
-    def get_sposts(self):
-        search = self.request.GET.get('q')
-        if search != '' and search is not None:
-            searched = Post.objects.filter(author_id=self.request.user.profile, title__icontains=search)
-        queryset = searched
-        paginator = Paginator(queryset, 8)
-        page = self.request.GET.get('page')
-        s_posts = paginator.get_page(page)
-        return s_posts
 
 
 # post delete view
