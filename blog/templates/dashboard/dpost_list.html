@@ -17,7 +17,8 @@
 
 
                 <div class="col-lg-8">
-                    <h1 class="mt-2"><b>Posts</b><a class="btn btn-primary mx-2" href="#"><i class="fas fa-pencil-alt"></i>Create Post</a>
+                    <h1 class="mt-2"><b>Posts</b><a href="#" class="btn btn-primary mx-2" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Create Post</a>
+
                     </h1>
                   <hr class="mt-0 mb-2">
                 </div>
@@ -31,7 +32,8 @@
 
                         <div class="col-md-4">
                             <div class="post-image">
-                                <a href="#"><img class="img-fluid" src="{{ post.image.url }}" alt="image.png"></a>
+                                <a href="{% url 'post_detail' slug=post.slug %}"><img class="card-img-top" src="{{ post.image.url }}" height="150px" width="150px" alt="image.png"></a>
+
                             </div>
                         </div>
 
@@ -41,7 +43,7 @@
                                     <div class="small text-muted">Published on {{ post.published_date }} posted by {{ post.author.user.username| title }}</div>
                                     <h5 class="card-title"><b>{{ post.title }}</b></h5>
                                     <a class="btn btn-primary" href="{% url 'post_detail' slug=post.slug %}">View</a>
-                                    <a class="btn btn-warning" href="{% url 'post_update' slug=post.slug %}">Update</a>
+                                    <a class="btn btn-warning" href="{% url 'post_update' slug=post.slug %}" data-bs-toggle="modal" data-bs-target="#updatePost" data-bs-whatever="@mdo">Update</a>
                                     <a class="btn btn-danger" href="{% url 'post_delete' slug=post.slug %}">Delete</a>
                                 </div>
                         </div>

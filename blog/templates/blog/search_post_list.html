@@ -1,4 +1,5 @@
 {% extends 'blog/base.html' %}
+{% load static %}
 
 {% block title %}
 {% if user.username %}
@@ -26,7 +27,7 @@ Frendzy <span class="text-primary">Blog</span>
                     <div class="col-md-4">
                         {% if post.image %}
                         <div class="post-image">
-                            <a href="{% url 'post_detail' slug=post.slug %}"><img class="card-img-top" src="{{ post.image.url }}" alt="image.png"></a>
+                            <a href="{% url 'post_detail' slug=post.slug %}"><img class="card-img-top" src="{{ post.image.url }}" height="200px" width="200px" alt="image.png"></a>
                         </div>
                         {% endif %}
                     </div>
@@ -43,11 +44,15 @@ Frendzy <span class="text-primary">Blog</span>
             </div>
         </div>
         {% empty %}
+
         <div class="card content mt-2">
             <div class="card-body">
-                <h2 class="card-title text-center">You have no post matching your search query</h2>
+                <h3 class="card-title text-center">You have no post matching your search query</h3>
+                <img class="rounded mx-auto d-block" src="{% static 'assets/search.png' %}" height="50%" width="50%">
+
             </div>
         </div>
+
 
         {% endfor %}
 

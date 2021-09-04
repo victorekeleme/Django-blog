@@ -15,12 +15,9 @@ urlpatterns = [
     path('create/', views.PostCreateView.as_view(), name='post_create'),
 
     path('delete/<slug:slug>/', views.PostDeleteView.as_view(), name='post_delete'),
-    path('update/<slug:slug>/', views.PostUpdateView.as_view(), name='post_update'),
-    # path('<slug:slug>/publish', views.publish_post, name='post_publish'),
+    path('update/<slug:slug>/', views.PostUpdateView, name='post_update'),
     path('like/<slug:slug>', views.Like_Post, name = 'like_post'),
 
-    # path('post/<slug:slug>/comment/', views.add_comment_to_post, name = 'add_comment'),
-    # path('post/<slug:slug>/comment/', views.CommentCreateView.as_view(), name = 'add_comment')
 
 
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

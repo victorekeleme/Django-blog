@@ -10,7 +10,7 @@
 
 <div class="card content mt-2">
 
-    <a href="#"><img class="card-img-top" src="{{ post.image.url }}" alt="image.png"></a>
+    <a href="#"><img class="card-img-top" src="{{ post.image.url }}" alt="image.png" height="450px"></a>
 
     <div class="card-body">
         <div class="small text-muted">Published on {{ post.published_date }} posted by {{ post.author.user.username| title }}</div>
@@ -28,7 +28,7 @@
         <form id="form" method="POST" action="{% url 'post_detail' slug=post.slug%}">
             {% csrf_token %}
         <div class="input-group comment-input">
-            <a href="#"><img class="card-img-top" height="50px" src="{{ post.image.url }}" alt="image.png"></a>
+            <a href="#"><img class="card-img-top" height="50px" src="{{ user.profile.profile_pic.url }}" alt="image.png"></a>
             <input name="content" class="form-control" type="text" placeholder="Leave a comment">
             <button type="submit" class="btn btn-primary" id="button-search" type="button">Post</button>
         </div>
@@ -36,24 +36,23 @@
     </div>
 </div>
 
-{% if comments %}
-<div class="card my-2">
-
-        <div class="card-header bg-dark text-white">
-            Comments
-        </div>
-    <br>
-            {% for comment in comments %}
-            <div class="d-flex flex-row content mx-4"> <img src="img/profile.png" height="40" width="40" class="rounded-circle">
-                <div class="d-flex flex-column ms-2">
-                    <h6 class="mb-1 text-primary">posted by {{ comment.author.user.username }} on {{ comment.created_on }}</h6>
-                    <p class="comment-text">{{ comment.content }}</p>
-                </div>
+{% if post.comments.all %}
+    <div class="card my-2">
+            <div class="card-header bg-dark text-white">
+                Comments
             </div>
+            `<br>
+            {% for comment in post.comments.all %}
+                <div class="d-flex flex-row content mx-4"> <img src="{{ user.profile.profile_pic.url }}" height="40" width="40" class="rounded-circle">
+                    <div class="d-flex flex-column ms-2">
+                        <h6 class="mb-1 text-primary">posted by {{ comment.author.user.username }} on {{ comment.created_on }}</h6>
+                        <p class="comment-text">{{ comment.content }}</p>
+                    </div>
+                </div>
             {% endfor %}
 
 
-</div>
+    </div>
 {% endif %}
 </div>
 

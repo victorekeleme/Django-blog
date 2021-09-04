@@ -3,7 +3,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
-from django.views.generic import ListView, DetailView, TemplateView, CreateView, DeleteView, UpdateView
+from django.views.generic import ListView, DetailView, TemplateView, FormView ,CreateView, DeleteView, UpdateView
 from blog.models import Post, Category, Comments
 from profiles.models import Profile
 
@@ -35,8 +35,28 @@ class PostListView(CategoryMixin, ListView):
     paginate_by = 8
     template_name = 'blog/post_list.html'
 
-    def get_queryset(self):
-        return Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
+    def get_context_data(self, **kwargs):
+        context = super(PostListView, self).get_context_data(**kwargs)
+        context['post_form'] = PostForm
+        return context
+    #
+    # def get_queryset(self):
+    #     return Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
+
+
+# creating post
+class PostCreateView(LoginRequiredMixin, CreateView):
+    login_url = 'profiles:login'
+    template_name = 'blog/base.html'
+    form_class = PostForm
+    success_url = reverse_lazy('post_list')
+
+
+    def form_valid(self, form):
+        post_form = form.save(commit=False)
+        post_form.author = self.request.user.profile
+        post_form.save()
+        return super(PostCreateView, self).form_valid(form)
 
 # displays posts by category
 class CategoryDetailView(CategoryMixin,DetailView):
@@ -50,6 +70,7 @@ class CategoryDetailView(CategoryMixin,DetailView):
         cat_posts = self.get_cat_posts()
         context['cat_posts'] = cat_posts
         context['page_obj'] = cat_posts
+        context['post_form'] = PostForm
         return context
 
     def get_cat_posts(self):
@@ -69,6 +90,7 @@ class SearchPostView(CategoryMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(SearchPostView, self).get_context_data(**kwargs)
         s_posts = self.get_posts()
+        context['post_form'] = PostForm
         context['s_posts'] = s_posts
         context['page_obj'] = s_posts
         return context
@@ -93,6 +115,8 @@ class PostDetailView(CategoryMixin, DetailView):
         context = super(PostDetailView, self).get_context_data(**kwargs)
         context['comments'] = Comments.objects.all()
         context['form'] = CommentForm
+        context['post_form'] = PostForm
+
         return context
 
     # create comment in post detailview
@@ -108,6 +132,120 @@ class PostDetailView(CategoryMixin, DetailView):
             return redirect(reverse("post_detail", kwargs={'slug':post.slug}))
 
 
+
+# user dashboard for CRUD operations
+class DashBoardView(LoginRequiredMixin, CategoryMixin, ListView):
+    login_url = 'profiles:login'
+    template_name = 'dashboard/dpost_list.html'
+    model = Post
+
+    def get_context_data(self, **kwargs):
+        context = super(DashBoardView, self).get_context_data(**kwargs)
+        d_posts = self.get_dposts()
+        context['d_posts'] = d_posts
+        context['page_obj'] = d_posts
+        context['post_form'] = PostForm
+        return context
+
+
+    def get_dposts(self):
+        queryset = Post.objects.filter(author_id=self.request.user.profile)
+        paginator = Paginator(queryset, 8)
+        page = self.request.GET.get('page')
+        d_posts = paginator.get_page(page)
+        return d_posts
+
+
+
+# post delete view
+class PostDeleteView(LoginRequiredMixin, DeleteView):
+    login_url = 'profiles:login'
+    model = Post
+    template_name = 'dashboard/post_confirm_delete.html'
+    success_url = reverse_lazy('dashboard')
+
+def PostUpdateView(request, slug):
+    context={}
+
+    post = get_object_or_404(Post, slug=slug)
+    print(post)
+    form = PostForm(request.POST or None, instance=post)
+
+    if form.is_valid():
+        post= form.save(commit=False)
+        post.save()
+        return redirect('dashboard')
+    context = {'post_form':form}
+
+    return render(request, 'dashboard/d_base.html', context)
+
+
+# post update view
+# class PostUpdateView(LoginRequiredMixin, UpdateView):
+#     login_url = 'profiles:login'
+#     form_class = PostForm
+#     model = Post
+#     template_name = 'dashboard/d_base.html'
+#     success_url = reverse_lazy('dashboard')
+#
+#     def get_context_data(self, **kwargs):
+#         context = super(PostUpdateView, self).get_context_data()
+#         context['form'] = PostForm
+#         return context
+#
+#     # def get(self, request, *args, **kwargs):
+#     #     post = get_object_or_404(Post, slug=self.slug)
+#     #     form = PostForm(request.POST or None, instance=post)
+#     #
+#     #     if form.is_valid():
+#     #         post = form.save(commit=False)
+#     #         post.save()
+#     #         return redirect('dashboard')
+#     #
+#
+
+
+
+
+
+
+
+
+
+# like post functionality
+@login_required
+def Like_Post(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+    is_liked = False
+    if post.likes.filter(id=request.user.profile.id).exists():
+        post.likes.remove(request.user.profile)
+        is_liked = False
+    else:
+        post.likes.add(request.user.profile)
+        is_liked = True
+
+    return HttpResponseRedirect(reverse('post_list'))
+
+
+#REST API
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+
+
+
+
+# @login_required
+# def publish_post(request,slug):
+#     post = get_object_or_404(Post, slug=slug)
+#     post_slug = post.slug
+#     post.publish()
+#     return redirect('dashboard')
 
 
 
@@ -144,97 +282,3 @@ class PostDetailView(CategoryMixin, DetailView):
 #
 #         return redirect('post_detail', slug=post.slug)
 #     return reverse('post_detail', slug=post.slug)
-
-
-# user dashboard for CRUD operations
-class DashBoardView(LoginRequiredMixin, CategoryMixin, ListView):
-    login_url = 'profiles:login'
-    template_name = 'dashboard/dpost_list.html'
-    model = Post
-
-    def get_context_data(self, **kwargs):
-        context = super(DashBoardView, self).get_context_data(**kwargs)
-        d_posts = self.get_dposts()
-        context['d_posts'] = d_posts
-        context['page_obj'] = d_posts
-        return context
-
-
-    def get_dposts(self):
-        queryset = Post.objects.filter(author_id=self.request.user.profile)
-        paginator = Paginator(queryset, 8)
-        page = self.request.GET.get('page')
-        d_posts = paginator.get_page(page)
-        return d_posts
-
-
-# creating post
-class PostCreateView(LoginRequiredMixin, CreateView):
-    login_url = 'profiles:login'
-    template_name = 'dashboard/post_form.html'
-    form_class = PostForm
-    success_url = reverse_lazy('dashboard')
-
-    def form_valid(self, form):
-        post_form = form.save(commit=False)
-        post_form.author = self.request.user.profile
-        post_form.save()
-        return super(PostCreateView, self).form_valid(form)
-
-
-# post delete view
-class PostDeleteView(LoginRequiredMixin, DeleteView):
-    login_url = 'profiles:login'
-    model = Post
-    template_name = 'dashboard/post_confirm_delete.html'
-    success_url = reverse_lazy('dashboard')
-
-# post update view
-class PostUpdateView(LoginRequiredMixin, UpdateView):
-    login_url = 'profiles:login'
-    form_class = PostForm
-    model = Post
-    template_name = 'dashboard/post_form.html'
-    success_url = reverse_lazy('dashboard')
-
-
-# like post functionality
-@login_required
-def Like_Post(request, slug):
-    post = get_object_or_404(Post, slug=slug)
-    is_liked = False
-    if post.likes.filter(id=request.user.profile.id).exists():
-        post.likes.remove(request.user.profile)
-        is_liked = False
-    else:
-        post.likes.add(request.user.profile)
-        is_liked = True
-
-    return HttpResponseRedirect(reverse('post_list'))
-
-
-# @login_required
-# def publish_post(request,slug):
-#     post = get_object_or_404(Post, slug=slug)
-#     post_slug = post.slug
-#     post.publish()
-#     return redirect('dashboard')
-
-
-
-
-
-#REST API
-class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-
-class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
-
-
-
-
-
-

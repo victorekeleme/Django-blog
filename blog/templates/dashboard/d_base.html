@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% load crispy_forms_tags %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -29,12 +30,13 @@
 
         <div class="collapse navbar-collapse" id="navmenu">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="{% url 'post_list' %}">Posts</a></li>
                 {% if user.is_authenticated %}
-                <li class="nav-item"><a class="nav-link" href="{% url 'profiles:logout' %}">Create Post</a></li>
+                <li class="nav-item"><a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Create Post</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'post_list' %}">Posts</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'profiles:logout' %}">Logout</a></li>
                 <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'dashboard' %}">Dashboard</a></li>
                 {% else %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'post_list' %}">Posts</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'profiles:login' %}">Login</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'profiles:signup' %}">Sign Up</a></li>
                 {% endif %}
@@ -55,6 +57,60 @@
     </nav>
      <div class="container mt-4">
 
+         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog content">
+            <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel"><b>Create Post</b></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <div class="modal-body">
+                <form method="post" enctype="multipart/form-data" action="{% url 'post_create' %}">
+                    {% csrf_token %}
+
+                    {{ post_form | crispy }}
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <input type="submit" class="btn btn-primary" value="Post">
+                    </div>
+                </form>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+
+
+
+         <div class="modal fade" id="updatePost" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog content">
+            <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="updatePostLabel"><b>Update Post</b></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <div class="modal-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {{ post_form | crispy }}
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <input type="submit" class="btn btn-primary" value="Post">
+                    </div>
+                </form>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+
 
 
         <div class="row">
@@ -63,11 +119,10 @@
             <div class="col-lg-4">
 
                 <!-- Profile widget-->
-                <div class="profile-card mb-4">
-                            <div class="profilep">
-                                <img class="card-img-top" src="{{ user.profile.profile_pic.url }}" alt="John">
-                            </div>
+                <div class="card profile-card mb-4">
+
                             <div class="card-body">
+                                <div class="card-img-top text-center"> <img src="{{ user.profile.profile_pic.url }}" height="50px" width="100px" class="rounded-circle"></div>
                                 <h1>{{ user.profile.first_name | title}} {{ user.profile.last_name | title }}</h1>
 
                                 <p class="card-title">{{ user.profile.bio }}</p>

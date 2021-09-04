@@ -13,6 +13,7 @@ body {
   margin-bottom: 10px;
 }
 
+
 .form-control {
   box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.05);
 }
@@ -34,11 +35,6 @@ body {
   padding: 0px;
   box-shadow: 0 0 5px 5px #0000000d;
   border-radius: 10px;
-}
-
-.content-dash img {
-  height: 100px;
-  margin: 5px;
 }
 
 /* Profile card */
@@ -72,7 +68,8 @@ body {
 
 .profilep{
   vertical-align: middle;
-  width: 50px;
-  height: 50px;
+  width: 50%;
+  height: 50%;
   border-radius: 50%;
 }
+

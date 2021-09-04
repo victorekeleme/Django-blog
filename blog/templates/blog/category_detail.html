@@ -1,4 +1,5 @@
 {% extends 'blog/base.html' %}
+{% load static %}
 
 {% block title %}
 {% if user.username %}
@@ -26,7 +27,7 @@ Frendzy <span class="text-primary">Blog</span>
                     <div class="col-md-4">
                         {% if post.image %}
                         <div class="post-image">
-                            <a href="{% url 'post_detail' slug=post.slug %}"><img class="card-img-top" src="{{ post.image.url }}" alt="image.png"></a>
+                            <a href="{% url 'post_detail' slug=post.slug %}"><img class="card-img-top" src="{{ post.image.url }}" height="200px" width="200px" alt="image.png"></a>
                         </div>
                         {% endif %}
                     </div>
@@ -45,7 +46,12 @@ Frendzy <span class="text-primary">Blog</span>
         {% empty %}
         <div class="card content mt-2">
             <div class="card-body">
-                <h2 class="card-title">No post to display</h2>
+                <h3 class="card-title text-center"><b>No post to display</b></h3>
+                <img class="rounded mx-auto d-block" src="{% static 'assets/empty.png' %}" height="50%" width="50%" />
+                <h5 class="card-title text-center"><b>Be the first to <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">create a post</a></b></h5>
+
+
+
             </div>
         </div>
 
@@ -53,7 +59,7 @@ Frendzy <span class="text-primary">Blog</span>
 
 
 
-    {% if posts %}
+    {% if category.post_set.all %}
     <nav aria-label="Pagination">
         <hr class="my-0" />
         <ul class="pagination justify-content-center my-4">
