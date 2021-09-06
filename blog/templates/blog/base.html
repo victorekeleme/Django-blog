@@ -34,8 +34,8 @@
         <div class="collapse navbar-collapse" id="navmenu">
             <ul class="navbar-nav ms-auto">
                 {% if user.is_authenticated %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'post_list' %}">Home</a></li>
                 <li class="nav-item"><a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Create Post</a>
-                <li class="nav-item"><a class="nav-link" href="{% url 'post_list' %}">Posts</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'profiles:logout' %}">Logout</a></li>
                 <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'dashboard' %}">Dashboard</a></li>
                 {% else %}
@@ -125,20 +125,39 @@
             <!-- Side widgets-->
             <div class="col-lg-4">
                 <!-- Categories widget-->
+
+                {% if post %}
                 <div class="card content mb-4">
-                    <div class="card-header bg-dark text-light">Trending Posts</div>
+                    <div class="card-header bg-dark text-light">Related Posts</div>
                     <div class="card-body">
                         <ul>
-                            <li><p>15 Types Of Blog Post Titles That Get Clicked: A Beginner’s Guide</p></li>
-                            <li><p>15 Types Of Blog Post Titles That Get Clicked: A Beginner’s Guide</p></li>
-                            <li><p>15 Types Of Blog Post Titles That Get Clicked: A Beginner’s Guide</p></li>
-                            <li><p>15 Types Of Blog Post Titles That Get Clicked: A Beginner’s Guide</p></li>
-                            <li><p>15 Types Of Blog Post Titles That Get Clicked: A Beginner’s Guide</p></li>
+                            {% for post in post.category.post_set.all %}
+                            <li><p><a class="text-decoration-none text-dark" href="{% url 'post_detail' slug=post.slug %}">{{ post.title }}</a></p></li>
+                            {% endfor %}
                         </ul>
 
 
                     </div>
                 </div>
+                {% endif %}
+
+
+                {% if tPosts %}
+                <div class="card content mb-4">
+                    <div class="card-header bg-dark text-light">Trending Posts</div>
+                    <div class="card-body">
+                        <ul>
+                            {% for post in tPosts %}
+                            <li><p><a class="text-decoration-none text-dark" href="{% url 'post_detail' slug=post.slug %}">{{ post.title }}</a></p></li>
+                            {% endfor %}
+                        </ul>
+
+
+                    </div>
+                </div>
+                {% endif %}
+
+
                 <!-- Side widget-->
 <!--                <div class="card sidebar mb-4">-->
 <!--                    <div class="card-header bg-dark text-light">Side Widget</div>-->

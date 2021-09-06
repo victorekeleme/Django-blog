@@ -26,11 +26,13 @@
                     </div>
                     <div class="col-md-8">
                             <div class="card-body">
-                                <div class="small text-muted">Published on {{ post.published_date }} posted by {{ post.author.user.username| title }}</div>
+                                <a class="text-decoration-none text-dark" href="{% url 'post_detail' slug=post.slug %}">
+                                <div class="small text-muted">posted by {{ post.author.user.username| title }} on {{ post.published_date }} - {{post.category}} </div>
                                 <h2 class="card-title h4">{{ post.title }}</h2>
                                 <p class="card-text">{{ post.content|safe|truncatechars:200 }}</p>
-<!--                                <a class="btn btn-primary" href="{% url 'like_post' slug=post.slug %}">Recommend Post {{ post.likes.count }}</a>-->
-                                <a class="btn btn-primary" href="{% url 'post_detail' slug=post.slug %}">Read More</a>
+                                <p class="card-text mt-4"> {{ post.likes.count }} likes  {{ post.comments.count }} comments </p>
+
+                                </a>
 
                             </div>
                     </div>

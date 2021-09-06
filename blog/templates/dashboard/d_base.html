@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 {% load static %}
 {% load crispy_forms_tags %}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -31,8 +32,8 @@
         <div class="collapse navbar-collapse" id="navmenu">
             <ul class="navbar-nav ms-auto">
                 {% if user.is_authenticated %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'post_list' %}">Home</a></li>
                 <li class="nav-item"><a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Create Post</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'post_list' %}">Posts</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'profiles:logout' %}">Logout</a></li>
                 <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'dashboard' %}">Dashboard</a></li>
                 {% else %}
@@ -85,33 +86,6 @@
 
 
 
-         <div class="modal fade" id="updatePost" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog content">
-            <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="updatePostLabel"><b>Update Post</b></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-
-              <div class="modal-body">
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-
-                    {{ post_form | crispy }}
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <input type="submit" class="btn btn-primary" value="Post">
-                    </div>
-                </form>
-              </div>
-
-
-            </div>
-          </div>
-        </div>
-
-
 
         <div class="row">
 
@@ -121,19 +95,18 @@
                 <!-- Profile widget-->
                 <div class="card profile-card mb-4">
 
-                            <div class="card-body">
-                                <div class="card-img-top text-center"> <img src="{{ user.profile.profile_pic.url }}" height="50px" width="100px" class="rounded-circle"></div>
-                                <h1>{{ user.profile.first_name | title}} {{ user.profile.last_name | title }}</h1>
+                        <div class="card-body">
+                            <div class="card-img-top text-center"> <img src="{{ user.profile.profile_pic.url }}" height="50px" width="100px" class="rounded-circle"></div>
+                            <h1>{{ user.profile.first_name | title}} {{ user.profile.last_name | title }}</h1>
 
-                                <p class="card-title">{{ user.profile.bio }}</p>
+                            <p class="card-title">{{ user.profile.bio }}</p>
 
-
-                                <a href="#"><i class="fa fa-facebook"></i></a>
-                                <a href="#"><i class="fa fa-twitter"></i></a>
-                                <a href="#"><i class="fa fa-linkedin"></i></a>
-                                <br>
-                                <button class="btn btn-primary mt-2" href="#">Update</button>
-                            </div>
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                            <a href="#"><i class="fa fa-linkedin"></i></a>
+                            <br>
+                            <a class="btn btn-primary mt-2" href="{% url 'profile_update' slug=user.profile.slug %}">Update</a>
+                        </div>
 
                 </div>
 

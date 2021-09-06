@@ -14,8 +14,9 @@ urlpatterns = [
     path('dashboard/', views.DashBoardView.as_view(), name='dashboard'),
     path('create/', views.PostCreateView.as_view(), name='post_create'),
 
-    path('delete/<slug:slug>/', views.PostDeleteView.as_view(), name='post_delete'),
-    path('update/<slug:slug>/', views.PostUpdateView, name='post_update'),
+    path('delete/<slug:slug>/', views.PostDeleteView, name='post_delete'),
+    path('update/<slug:slug>/', views.PostUpdateView.as_view(), name='post_update'),
+    path('profileupdate/<slug:slug>/', views.ProfileUpdateView.as_view(), name='profile_update'),
     path('like/<slug:slug>', views.Like_Post, name = 'like_post'),
 
 

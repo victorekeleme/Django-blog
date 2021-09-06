@@ -40,11 +40,12 @@
                         <div class="col-md-8">
 
                                 <div class="card-body">
-                                    <div class="small text-muted">Published on {{ post.published_date }} posted by {{ post.author.user.username| title }}</div>
+                                    <div class="small text-muted">posted by {{ post.author.user.username| title }} on {{ post.published_date }} - {{post.category}}</div>
                                     <h5 class="card-title"><b>{{ post.title }}</b></h5>
                                     <a class="btn btn-primary" href="{% url 'post_detail' slug=post.slug %}">View</a>
-                                    <a class="btn btn-warning" href="{% url 'post_update' slug=post.slug %}" data-bs-toggle="modal" data-bs-target="#updatePost" data-bs-whatever="@mdo">Update</a>
+                                    <a class="btn btn-warning" href="{% url 'post_update' slug=post.slug %}">Update</a>
                                     <a class="btn btn-danger" href="{% url 'post_delete' slug=post.slug %}">Delete</a>
+<!--                                    data-bs-toggle="modal" data-bs-target="#deleteModal" data-bs-whatever="@mdo"-->
                                 </div>
                         </div>
 
@@ -53,30 +54,16 @@
             {% empty %}
             <div class="card content mt-2">
                 <div class="card-body">
-                    <h5 class="card-title text-center"><b>No Post To Display</b></h5>
+                    <h3 class="card-title text-center"><b>No post to display</b></h3>
+                    <img class="rounded mx-auto d-block" src="{% static 'assets/empty.png' %}" height="50%" width="50%" />
+                    <h5 class="card-title text-center"><b>Be the first to <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">create a post</a></b></h5>
+
                 </div>
             </div>
             {% endfor %}
 
 
 
-        <!-- Pagination-->
-        {% if d_posts %}
-        <nav aria-label="Pagination">
-            <hr class="my-0" />
-            <ul class="pagination justify-content-center my-4">
-                {% if page_obj.has_previous %}
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page.number }}" tabindex="-1" aria-disabled="true">Previous</a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a></li>
-                {% endif %}
-                <li class="page-item active" aria-current="page"><a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a></li>
-                {% if page_obj.has_next %}
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
-                {% endif %}
-            </ul>
-        </nav>
-        {% endif %}
     </div>
 
 {% endblock %}

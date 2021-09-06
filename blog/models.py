@@ -17,6 +17,7 @@ class Post(models.Model):
     category = models.ForeignKey('blog.category', on_delete=models.CASCADE)
     likes = models.ManyToManyField(Profile, blank=True, related_name="post_like")
 
+
     def likes_count(self):
         return self.likes.count()
 
