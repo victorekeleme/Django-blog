@@ -13,6 +13,7 @@ class Profile(models.Model):
     email = models.CharField(max_length=200, blank=True)
     bio = models.CharField(max_length=500, blank=True)
     profile_pic = models.ImageField(default='profiles.png', upload_to='profile_pics/')
+    social_links = models.ForeignKey( 'profiles.Socials', related_name='socials', on_delete=models.CASCADE)
     slug = models.SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):
@@ -31,3 +32,10 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.username}"
+
+class Socials(models.Model):
+    social_name = models.CharField(max_length=200, blank=False)
+    url = models.URLField()
+
+    def __str__(self):
+        return self.social_name

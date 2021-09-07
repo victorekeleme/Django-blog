@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'profiles',
     'crispy_forms',
     'rest_framework',
+    'cloudinary_storage',
+    'cloudinary'
 ]
 
 MIDDLEWARE = [
@@ -162,7 +164,15 @@ django_heroku.settings(locals())
 
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+# MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME':'hzy19mmzo',
+    'API Key': '769254333968313',
+    'API Secret': '4QDcdjzUBOZSkXAWE3YtD06EUw4',
+}
 
 
 # Default primary key field type
