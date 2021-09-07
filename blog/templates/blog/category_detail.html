@@ -48,10 +48,11 @@ Frendzy <span class="text-primary">Blog</span>
             <div class="card-body">
                 <h3 class="card-title text-center"><b>No post to display</b></h3>
                 <img class="rounded mx-auto d-block" src="{% static 'assets/empty.png' %}" height="50%" width="50%" />
+                {% if user.is_authenticated %}
                 <h5 class="card-title text-center"><b>Be the first to <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">create a post</a></b></h5>
-
-
-
+                {% else %}
+                <h5 class="card-title text-center"><b><a class="text-decoration-none" href="{% url 'profiles:login' %}">Login to create post</a></b></h5>
+                {% endif %}
             </div>
         </div>
 

@@ -101,9 +101,9 @@
 
                             <p class="card-title">{{ user.profile.bio }}</p>
 
-                            <a href="#"><i class="fa fa-facebook"></i></a>
-                            <a href="#"><i class="fa fa-twitter"></i></a>
-                            <a href="#"><i class="fa fa-linkedin"></i></a>
+                            <a href="{{user.profile.facebook}}"><i class="fa fa-facebook"></i></a>
+                            <a href="{{user.profile.twitter}}"><i class="fa fa-twitter"></i></a>
+                            <a href="{{user.profile.linkedin}}"><i class="fa fa-linkedin"></i></a>
                             <br>
                             <a class="btn btn-primary mt-2" href="{% url 'profile_update' slug=user.profile.slug %}">Update</a>
                         </div>
