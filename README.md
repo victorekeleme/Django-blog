@@ -1,4 +1,4 @@
-# frendzy-django-blog
+# Frendzy Django Blog
 
 A Django Socail Blog website.
 
@@ -20,6 +20,6 @@ A Django Socail Blog website.
 5. Now start the localhost server
 * $ python manage.py runserver
 
-Frendzy Blog Portfolio
+Frendzy Blog
 
 © 2021 GitHub, Inc.
