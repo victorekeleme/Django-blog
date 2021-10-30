@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 
     <title>
         {% block title %}
@@ -43,7 +46,7 @@
                 {% endif %}
 
                 <li class="nav-item">
-                <form class="form-control" method="GET" action="{% url 'search_result' %}">
+                <form method="GET" action="{% url 'search_result' %}">
                         {% csrf_token %}
                     <div class="input-group">
                         <input class="form-control" name="q" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
@@ -96,8 +99,8 @@
                 <div class="card profile-card mb-4">
 
                         <div class="card-body">
-                            <div class="card-img-top text-center"> <img src="{{ user.profile.profile_pic.url }}" height="50px" width="100px" class="rounded-circle"></div>
-                            <h1>{{ user.profile.first_name | title}} {{ user.profile.last_name | title }}</h1>
+                            <div class="card-img-top text-center mb-2"> <img src="{{ user.profile.profile_pic.url }}" height="50px" width="100px" class="rounded-circle"></div>
+                            <h3>{{ user.profile.first_name | title}} {{ user.profile.last_name | title }}</h3>
 
                             <p class="card-title">{{ user.profile.bio }}</p>
 
@@ -105,7 +108,7 @@
                             <a href="{{user.profile.twitter}}"><i class="fa fa-twitter"></i></a>
                             <a href="{{user.profile.linkedin}}"><i class="fa fa-linkedin"></i></a>
                             <br>
-                            <a class="btn btn-primary mt-2" href="{% url 'profile_update' slug=user.profile.slug %}">Update</a>
+                            <a class="btn btn-primary" href="{% url 'profile_update' slug=user.profile.slug %}"><h3>Edit Profile</h3></a>
                         </div>
 
                 </div>

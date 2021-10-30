@@ -61,10 +61,27 @@ body {
 
 .profile-card a {
   text-decoration: none;
-  font-size: 30px;
+  font-size: 50px;
   color: black;
   margin: 5px;
 }
+
+.main-container {
+    height:100%;
+
+}
+
+.post-icons {
+    font-size: 50px;
+
+}
+.post-icons .like {
+    color:red;
+
+}
+
+
+
 
 .profilep{
   vertical-align: middle;
@@ -73,3 +90,9 @@ body {
   border-radius: 50%;
 }
 
+footer {
+    display:block;
+    position:relative;
+    bottom:0;
+    width:100%;
+}

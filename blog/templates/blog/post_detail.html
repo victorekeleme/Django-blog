@@ -16,15 +16,15 @@
         <div class="small text-muted">posted by {{ post.author.user.username| title }} on {{ post.published_date }} - {{ post.category }}</div>
         <h2 class="card-title">{{ post.title }}</h2>
         <p class="card-text">{{ post.content|safe|linebreaksbr }}</p>
+        <p class="card-text mt-4 post-icons"><a href="{% url 'like_post' slug=post.slug %}"><i class="fa fa-heart like"></i></a> {{ post.likes.count }}</p>
 
-        <a class="btn btn-primary" href="{% url 'like_post' slug=post.slug %}">Like</a>
     </div>
 
 </div>
 
 
  <!-- comments -->
-<div class="my-2">
+<div class="my-4">
 
     <div>
         <form id="form" method="POST" action="{% url 'post_detail' slug=post.slug%}">
@@ -39,7 +39,7 @@
 </div>
 
 {% if post.comments.all %}
-    <div class="card my-2">
+    <div class="card mb-5">
             <div class="card-header bg-dark text-white">
                 Comments
             </div>
@@ -52,8 +52,6 @@
                     </div>
                 </div>
             {% endfor %}
-
-
     </div>
 {% endif %}
 </div>

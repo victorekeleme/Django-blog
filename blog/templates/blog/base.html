@@ -11,6 +11,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
@@ -46,7 +51,7 @@
 
                 <li class="nav-item">
                     <div>
-                        <form class="form-control" method="GET" action="{% url 'search_result' %}">
+                        <form method="GET" action="{% url 'search_result' %}">
                             {% csrf_token %}
                             <div class="input-group">
                                 <input class="form-control" name="q" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
@@ -64,7 +69,9 @@
 
 <body>
 
-<div class="container mt-4">
+<div class="container main-container mt-4">
+    <section class="page-section">
+
 
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog content">
@@ -116,7 +123,6 @@
 
                 </div>
             </nav>
-
             {% block content %}
 
             {% endblock %}
@@ -166,16 +172,17 @@
             </div>
         </div>
     </div>
+
+    </section>
+</div>
+
     <!-- Footer-->
     <footer class="py-5 bg-dark">
         <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Frendzy <span class="text-primary">Blog</span> 2021</p></div>
         <div class="container"><p class="m-0 text-center text-white">Disclaimer: Every Frendzy <span class="text-primary">Blog</span> member is solely responsible for anything that he/she posts or uploads on Frendzy <span class="text-primary">Blog</span>.
         </p></div>
-
-
     </footer>
 
-</div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
             crossorigin="anonymous">
