@@ -1,8 +1,15 @@
-# Frendzy Django Blog
+# Frendzy Blog
 
-A Django Socail Blog website.
+A Django Social Blog website.
 
-#Requirements (that shall be installed in your system)
+![image](https://user-images.githubusercontent.com/74677661/139556427-da932eb2-04d6-4050-842b-f519f31b63d7.png)
+
+![image](https://user-images.githubusercontent.com/74677661/139556456-de2be401-78e8-4894-8024-15ab6ccb16ac.png)
+
+![image](https://user-images.githubusercontent.com/74677661/139556487-28542e60-607d-4ee5-9ffd-4a366d641126.png)
+
+
+# Requirements (that shall be installed in your system)
 1. Git
 2. virtualenv
 3. Python
